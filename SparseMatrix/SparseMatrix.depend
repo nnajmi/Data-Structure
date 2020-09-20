@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1589271125 source:c:\users\viole\desktop\learning\data structure\sparsematrix\main.c
+	<stdio.h>
+	<stdlib.h>
+
