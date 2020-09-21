@@ -24,7 +24,6 @@ class BST
         Node * InPre(Node *p);
         Node * InSucc(Node *p); 
         Node * Delete(Node *p, int key);
-        //void CreateFromPreorder(int pre[], int n); //not working
         void CreateFromPreorder(int pre[], int n);
 };
 void BST::Inorder(Node *p)
@@ -169,54 +168,6 @@ Node * BST::Delete(Node *p, int key)
     }
     return p;
 }
-// void BST::CreateFromPreorder(int pre[], int n)
-// {
-//     int comp;
-//     //Create root node
-//     int i = 0;
-//     root = new Node;
-//     root->data = pre[i++];
-//     root->lchild = root->rchild = nullptr;
-
-//     //Iterative steps
-//     Node *t;
-//     Node *p = root;
-//     stack <Node *> stk;
-//     while(i < n)
-//     {
-//         //Left child case
-//         if(pre[i] < p->data)
-//         {
-//             t = new Node;
-//             t->data = pre[i++];
-//             t->lchild = t->rchild = nullptr;
-//             p->lchild = t;
-//             stk.push(p);
-//             p = t;
-//         }
-//         //Right child case
-//         else
-//         {
-//             if(stk.empty())
-//                 comp = 32767;
-//             else
-//                 comp = stk.top()->data;
-//             if(pre[i] > p->data && pre[i] < comp)
-//             {
-//                 t = new Node;
-//                 t->data = pre[i++];
-//                 t->lchild = t->rchild = nullptr;
-//                 p->rchild = t;
-//                 p = t;
-//             }
-//             else
-//             {
-//                 p = stk.top();
-//                 stk.pop();
-//             }            
-//         }
-//     }
-// }
 void BST::CreateFromPreorder(int pre[], int n)
 {
     int comp;
@@ -228,32 +179,40 @@ void BST::CreateFromPreorder(int pre[], int n)
 
     //Iterative steps
     Node *t;
-    Node *p;
+    Node *p = root;
     stack <Node *> stk;
-    stk.push(root);
     while(i < n)
     {
-        p = nullptr;
-        while(!stk.empty() && pre[i] > stk.top()->data)
-        {
-            p = stk.top();
-            stk.pop();
-        }
-        if(p != nullptr)
+        //Left child case
+        if(pre[i] < p->data)
         {
             t = new Node;
             t->data = pre[i++];
             t->lchild = t->rchild = nullptr;
             p->lchild = t;
-            stk.push(p->rchild);
-        }   
+            stk.push(p);
+            p = t;
+        }
+        //Right child case
         else
         {
-            t = new Node;
-            t->data = pre[i++];
-            t->lchild = t->rchild = nullptr;
-            stk.top()->rchild = t;
-            stk.push(stk.top()->rchild);
+            if(stk.empty())
+                comp = 32767;
+            else
+                comp = stk.top()->data;
+            if(pre[i] > p->data && pre[i] < comp)
+            {
+                t = new Node;
+                t->data = pre[i++];
+                t->lchild = t->rchild = nullptr;
+                p->rchild = t;
+                p = t;
+            }
+            else
+            {
+                p = stk.top();
+                stk.pop();
+            }            
         }
     }
 }
@@ -305,8 +264,7 @@ int main()
     cout << endl;
 
     //Create BST from Preorder
-    //int pre[] = {30, 20, 10, 15, 25, 40, 50, 45};
-    int pre[] = {10, 5, 20, 8, 30, 50, 70, 1};
+    int pre[] = {30, 20, 10, 15, 25, 40, 50, 45};
     BST b;
     int n = sizeof(pre) / sizeof(pre[0]);
     b.CreateFromPreorder(pre, n);
