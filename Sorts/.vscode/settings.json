@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "BubbleSort.C": "cpp"
+        "BubbleSort.C": "cpp",
+        "Sorting.C": "cpp"
     }
 }
