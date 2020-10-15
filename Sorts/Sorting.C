@@ -58,7 +58,7 @@ void SelectionSort(int A[], int n)
         Swap(&A[i], &A[k]);
     }
 }
-//Quick Sort 
+//Quick Sort  o(nlog n)
 int Partition(int A[], int l, int h)
 {
     int pivot = A[l];
@@ -85,19 +85,58 @@ void QuickSort(int A[], int l, int h)
         QuickSort(A, j + 1, h);
     }
 }
+//Merge sort is stable but not adaptive o(nlog n)
+//Merge sort is the only sort that needs extra space that is n for extra array and log n for stack
+void Merge(int A[], int l, int mid, int h)
+{
+    int i = l, j = mid + 1, k = 0;
+    int B[100];
+
+    while(i <= mid && j <= h)
+    {
+        if(A[i] < A[j])
+            B[k++] = A[i++];
+        else
+            B[k++] = A[j++];
+    }
+    for(; i <= mid; i++)
+        B[k++] = A[i];
+    for(; j <= h; j++)
+        B[k++] = A[j];
+
+    for(i = l; i <= h; i++)
+        A[i] = B[i];
+}
+void MergeSortIterative(int A[], int n)
+{
+    int i, p, l, h, mid;
+    for(p = 2; p <= n; p = p *2)
+    {
+        for(i = 0; i + p - 1 < n; i = i + p)
+        {
+            l = i;
+            h = i + p - 1;
+            mid = (l + h)/2; //because they are integer, we get the floor value
+            Merge(A, l, mid, h);
+        }
+    }
+    if(p/2 < n)
+        Merge(A, 0, p/2 - 1, n-1);
+}
 int main()
 {
-    // int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
-    // int n = 10;
+    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
+    int n = 10;
 
     //BubbleSort(A, 10);
     //InsertionSort(A, 10);
-    // SelectionSort(A, 10);
+    //SelectionSort(A, 10);
+    MergeSortIterative(A, 10);
     
-    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
-    int n = 11;
+    // int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
+    // int n = 11;
 
-    QuickSort(A, 0, 10);
+    // QuickSort(A, 0, 10);
 
     for(int i = 0; i < n; i++)
         printf("%d ", A[i]);
