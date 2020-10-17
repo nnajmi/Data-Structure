@@ -89,8 +89,10 @@ void QuickSort(int A[], int l, int h)
 //Merge sort is the only sort that needs extra space that is n for extra array and log n for stack
 void Merge(int A[], int l, int mid, int h)
 {
-    int i = l, j = mid + 1, k = 0;
-    int B[100];
+    int i = l;
+    int j = mid + 1;
+    int k = l;
+    int B[100] = {0};
 
     while(i <= mid && j <= h)
     {
@@ -123,6 +125,17 @@ void MergeSortIterative(int A[], int n)
     if(p/2 < n)
         Merge(A, 0, p/2 - 1, n-1);
 }
+void MergeSortRecursive(int A[], int l, int h)
+{
+    int mid;
+    if(l < h)
+    {
+        mid = (l + h)/2;
+        MergeSortRecursive(A, l, mid);
+        MergeSortRecursive(A, mid + 1, h);
+        Merge(A, l, mid, h);
+    }
+}
 int main()
 {
     int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
@@ -131,7 +144,8 @@ int main()
     //BubbleSort(A, 10);
     //InsertionSort(A, 10);
     //SelectionSort(A, 10);
-    MergeSortIterative(A, 10);
+    //MergeSortIterative(A, 10);
+    MergeSortRecursive(A, 0, 9);
     
     // int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
     // int n = 11;
