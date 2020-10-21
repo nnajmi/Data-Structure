@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 void Swap(int *a, int *b)
 {
@@ -136,22 +137,90 @@ void MergeSortRecursive(int A[], int l, int h)
         Merge(A, l, mid, h);
     }
 }
+int FindMax(int A[], int n)
+{
+    int max = 0 - __INT32_MAX__;
+    int i;
+    for(i = 0; i < n; i++)
+    {
+        if(A[i] > max)
+            max = A[i];
+    }
+    return max;
+}
+void CountSort(int A[], int n)
+{
+    int i, j, max, *C;
+    max = FindMax(A,n);
+    C = (int *)malloc(sizeof(int)* (max+1));
+    for(i = 0; i < max+1; i++)
+        C[i] = 0;
+    for(i = 0; i < n; i++)
+        C[A[i]]++;  
+    i = 0;
+    j = 0;
+    while(j < max+1)
+    {
+        if(C[j] > 0)
+        {
+            A[i++] = j;
+            C[j]--;
+        }
+        else
+            j++;
+    }  
+}
+void ShellSort(int A[], int n)
+{
+    int gap, i, j, temp;
+    for(gap = n/2; gap >=1; gap /= 2)
+    {
+        for(i = gap; i < n; i++)
+        {
+            temp = A[i];
+            j = i - gap;
+            while(j >= 0 && A[j] > temp)
+            {
+                A[j+gap] = A[j];
+                j = j - gap;
+            }
+            A[j+gap] = temp;
+        }
+    }
+}
+struct Node
+{
+    int value;
+    Node *next;
+};
+void BinSort(int A[], int n)
+{
+    int i;
+    int max = FindMax(A, n);
+    Node** bins = (Node **)malloc(sizeof(Node *)*(max+1));    
+    for(i = 0; i < max+1; i++)
+        bins[i] = nullptr;
+    for
+}
 int main()
 {
-    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
-    int n = 10;
-
-    //BubbleSort(A, 10);
-    //InsertionSort(A, 10);
-    //SelectionSort(A, 10);
-    //MergeSortIterative(A, 10);
-    MergeSortRecursive(A, 0, 9);
+    //int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
+    //int n = sizeof(A)/sizeof(A[0]);
+    // Uncomment to test each sorting technique
+    //BubbleSort(A, n);
+    //InsertionSort(A, n);
+    //SelectionSort(A, n);
+    //MergeSortIterative(A, n);
+    //MergeSortRecursive(A, 0, n-1);
+    //CountSort(A, n);
+    //ShellSort(A, n);
     
-    // int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
-    // int n = 11;
+    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
+    int n = sizeof(A)/sizeof(A[0])-1;
+    QuickSort(A, 0, n);
 
-    // QuickSort(A, 0, 10);
-
+    printf("Size of array: %d\n", n);
+    printf("Sorted List: ");
     for(int i = 0; i < n; i++)
         printf("%d ", A[i]);
     printf("\n");
