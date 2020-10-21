@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cmath>
 
 void Swap(int *a, int *b)
 {
@@ -193,6 +194,30 @@ struct Node
     int value;
     Node *next;
 };
+void Insert(Node ** ptrBins, int idx)
+{
+    Node * temp = (Node *)malloc(sizeof(Node));
+    temp->value = idx;
+    temp->next = nullptr;
+
+    if(ptrBins[idx] == nullptr)
+        ptrBins[idx] = temp;
+    else
+    {
+        Node *p = ptrBins[idx];
+        while(p->next != nullptr)
+            p = p->next;
+        p->next = temp;
+    }   
+}
+int Delete(Node **ptrBins, int idx)
+{
+    Node *p = ptrBins[idx];
+    ptrBins[idx] = ptrBins[idx]->next;
+    int x = p->value;
+    free(p);
+    return x;
+}
 void BinSort(int A[], int n)
 {
     int i;
@@ -200,12 +225,81 @@ void BinSort(int A[], int n)
     Node** bins = (Node **)malloc(sizeof(Node *)*(max+1));    
     for(i = 0; i < max+1; i++)
         bins[i] = nullptr;
-    for
+    for(i = 0; i < n; i++)
+        Insert(bins, A[i]);
+    i = 0;
+    int j = 0;
+    while(i < max+1)
+    {
+        while(bins[i] != nullptr)
+            A[j++] = Delete(bins, i);
+        i++;
+    }
+    free(bins);
+}
+int CountDigits(int x)
+{
+    int count = 0;
+    while(x != 0)
+    {
+        x = x/10;
+        count ++;
+    }
+    return count;
+}
+int GetBinIndex(int x, int pass)
+{
+    return (int)(x / pow(10, pass)) % 10;
+}
+void Insert1(Node ** ptrBins, int value, int idx)
+{
+    Node * temp = (Node *)malloc(sizeof(Node));
+    temp->value = value;
+    temp->next = nullptr;
+
+    if(ptrBins[idx] == nullptr)
+        ptrBins[idx] = temp;
+    else
+    {
+        Node *p = ptrBins[idx];
+        while(p->next != nullptr)
+            p = p->next;
+        p->next = temp;
+    }   
+}
+void RadixSort(int A[], int n)
+{
+    int i;
+    int max = FindMax(A, n);
+    int nPass = CountDigits(max);
+    //printf("pass: %d\n", nPass);
+    Node **bins = (Node **)malloc(sizeof(Node *)*10);
+    for(i = 0; i < 10; i++)
+        bins[i] = nullptr;
+    for(int pass = 0; pass < nPass; pass++)
+    {
+        for(i = 0; i < n; i++)
+        {
+            int binIdx = GetBinIndex(A[i], pass);
+            Insert1(bins, A[i], binIdx);
+        }
+        i = 0;
+        int j = 0;
+        while(i < 10)
+        {
+            while(bins[i] != nullptr)
+                A[j++] = Delete(bins, i);
+            i++;
+        }
+        for(i = 0; i < 10; i++)
+            bins[i] = nullptr;
+    }
+    free(bins);
 }
 int main()
 {
-    //int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
-    //int n = sizeof(A)/sizeof(A[0]);
+    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2};
+    int n = sizeof(A)/sizeof(A[0]);
     // Uncomment to test each sorting technique
     //BubbleSort(A, n);
     //InsertionSort(A, n);
@@ -214,10 +308,12 @@ int main()
     //MergeSortRecursive(A, 0, n-1);
     //CountSort(A, n);
     //ShellSort(A, n);
+    //BinSort(A, n);
+    RadixSort(A, n);
     
-    int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
-    int n = sizeof(A)/sizeof(A[0])-1;
-    QuickSort(A, 0, n);
+    // int A[] = {3, 7, 9, 10, 6, 5, 12, 4, 11, 2, __INT32_MAX__};
+    // int n = sizeof(A)/sizeof(A[0])-1;
+    // QuickSort(A, 0, n);
 
     printf("Size of array: %d\n", n);
     printf("Sorted List: ");
